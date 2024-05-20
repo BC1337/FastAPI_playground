@@ -1,4 +1,4 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, HTTPException
 from typing  import Optional 
 
 students = [
@@ -21,3 +21,13 @@ def user_list(min: Optional[int] = None, max: Optional[int] = None):
 		return {'students': filtered_students}
 
 	return {'students': students}
+
+
+@app.get('/students/{student_id}')
+def user_detail(student_id: int):
+	student_check(student_id)
+	return {'student': students[student_id]}
+
+def student_check(student_id):
+	if not students[student_id]:
+		raise HTTPException(status_code=404, detail='Student Not Found')
